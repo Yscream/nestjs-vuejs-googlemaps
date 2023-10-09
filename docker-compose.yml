@@ -1,0 +1,29 @@
+version: '3.0'
+
+services:
+  google-map:
+    container_name: google-map
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    env_file:
+      - ./server/.env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3307:3307"
+    command: npm run start:dev
+    depends_on:
+      - google-map-postgres
+    restart: always
+  google-map-postgres:
+    container_name: google-map-postgres
+    image: postgres:latest
+    env_file:
+      - ./server/.env
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
